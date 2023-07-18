@@ -17,9 +17,11 @@ actual_board = [0, 0, 0,
 game_state = True
 
 main_menu = \
-"Welcome to Tic Tac Terminal \n \n \n" + "**********  Press 1 for Single Player Mode  **********\n\n" + "**********  Press 2 for Multiplayer Player Mode  **********\n\n"
+            "Welcome to Tic Tac Terminal \n \n \n" + "**********  Press 1 for Single Player Mode  **********\n\n" \
+            + "**********  Press 2 for Multiplayer Player Mode  **********\n\n"
 
-class handler(object):
+class Handler(object):
+
     def __init__(self, name1, name2, player_scores, player_priority, gamemode):
 
         self.name1 = "Player 1"
@@ -30,14 +32,21 @@ class handler(object):
 
     def name_players(self):
 
-        self.name1 = input(f"What is {self.name1}'s name? ")
-        self.name2 = input(f"What about {self.name2}'s name? ")
+        if self.gamemode == 2:
+
+            self.name1 = input(f"What is {self.name1}'s name? ")
+            self.name2 = input(f"What about {self.name2}'s name? ")
+
+        else:
+
+            self.name = input(f"What is {self.name1}'s name? ")
+
 
     def print_scores(self):
 
         print(f"{self.name1} has {self.player_scores[self.name1]} wins, {self.name2} has {self.player_scores[self.name2]} wins. Keep it up! :)")
 
-game_handler = handler(1, 1, 1, 1, 1)
+game_handler = Handler(1, 1, 1, 1, 1)
 #print(game_handler.name1)
 #print(game_handler.player_priority)
 #print(game_handler.player_scores)
@@ -54,30 +63,33 @@ while game_state == True:
     ## For settings, allow things like customized victory messages, profiles and passwords, ability to delete profiles, change password, delete
     ## match history etc, help should also explain the rules.
 
-    mode = input("Select your mode:  ")
+    game_handler.gamemode = input("Select your mode:  ")
 
-    if mode == '1': 
+    if game_handler.gamemode == '1': 
        
-       game_handler.name_players()
-       print(game_handler.player_scores)
-       play_state =  input(f"Welcome to Singleplayer! Your score is: {game_handler.player_scores}, would you like to play? ")
+       game_handler.name_players(game_handler.gamemode)
+       play_state =  input(f"Welcome to Singleplayer! You have {game_handler.player_scores[0]} wins, would you like to play? (yes or no): ")
 
-       if play_state == "no":
+       if play_state.lower() == "no":
+           
            ### Revisit, add return to main menu option
-           print("Goodbye!")
-           raise SystemExit()
-       
-       game_handler.gamemode = 1
+           return_main = input("Would you like to return to the main menu? (yes or no): ")
+           if return_main.lower() == "yes":
+               continue
+           else:
+               print("Goodbye!")
+               raise SystemExit()
+       elif play_state.lower() == "yes":
 
-       difficulty = int(input("please choose a difficulty: \n \
-                              1: Easy \n \
-                              2: Medium \n \
-                              3: Impossible \n"))
+            difficulty = int(input("please choose a difficulty: \n \
+                                    1: Easy \n \
+                                    2: Medium \n \
+                                    3: Impossible \n"))
        
-       print("sorry, adding AI player later, try again soon!")
-       continue
+            print("sorry, adding AI player later, try again soon!")
+            continue
 
-    elif mode == '2':
+    elif game_handler.gamemode == '2':
 
         game_handler.gamemode = 2
         ## Create main game loop and victory loop. Have it return the winner as 1 or 2 for player 1 and 2 and set up for reset 
@@ -85,10 +97,9 @@ while game_state == True:
 
     else:
 
-        exit_status = input("Sorry, would you like to exit or play? \n")
+        exit_status = input("Would you like to exit? (yes or no) \n")
 
-        if exit_status in ["exit", "Exit", "EXIT", "eXIT", "exIT", "exiT", "eXit", "exIt", "ExiT", "eXIt", "eXiT"]:
-
+        if exit_status.lower() == "yes":
             print("Goodbye!")
             raise SystemExit()
         
